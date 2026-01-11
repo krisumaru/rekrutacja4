@@ -5,30 +5,20 @@ declare(strict_types=1);
 namespace rekrutacja4\RestClient\Query;
 
 use rekrutacja4\RestClient\Exception\ApiException;
-use rekrutacja4\RestClient\Http\ClientInterface;
-use rekrutacja4\RestClient\Model\Producer;
+use rekrutacja4\RestClient\View\ProducerView;
 
 final  class ProducerQuery extends AbstractQuery
 {
     private const string PATH = '/shop_api/v1/producers';
 
-    public function __construct(ClientInterface $http, string $baseUri)
-    {
-        parent::__construct($http, $baseUri);
-    }
-
     /**
-     * @return Producer[]
+     * @return ProducerView[]
      *
      * @throws ApiException
      */
     public function getAll(): array
     {
-        $data = $this->request('GET', self::PATH);
-
-        if (!isset($data['producers']) || !is_array($data['producers'])) {
-            throw new ApiException('Invalid response from API');
-        }
+        $data = $this->get(self::PATH);
 
         /**
          * @var array<array{
@@ -38,16 +28,19 @@ final  class ProducerQuery extends AbstractQuery
          *     logo_filename: string,
          *     ordering: int,
          *     source_id: string,
-         * }> $items
+         * }> $producers
          */
-        $items = $data['producers'];
+        $producers = $data['producers'] ?? $data;
+        if (!is_array($producers)) {
+            throw new ApiException('Invalid response from API');
+        }
 
         $result = [];
-        foreach ($items as $item) {
-            if (!is_array($item)) {
+        foreach ($producers as $producer) {
+            if (!is_array($producer)) {
                 continue;
             }
-            $result[] = Producer::fromArray($item);
+            $result[] = ProducerView::fromArray($producer);
         }
 
         return $result;

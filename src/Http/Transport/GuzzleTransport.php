@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace rekrutacja4\RestClient\Http\Client;
+namespace rekrutacja4\RestClient\Http\Transport;
 
 use GuzzleHttp\ClientInterface as GuzzleClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use rekrutacja4\RestClient\Exception\ApiException;
-use rekrutacja4\RestClient\Http\ClientInterface;
+use rekrutacja4\RestClient\Http\TransportInterface;
 
-class GuzzleClient implements ClientInterface
+class GuzzleTransport implements TransportInterface
 {
     private GuzzleClientInterface $client;
 

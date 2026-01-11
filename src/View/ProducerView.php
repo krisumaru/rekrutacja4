@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace rekrutacja4\RestClient\Model;
+namespace rekrutacja4\RestClient\View;
 
 final readonly class ProducerView
 {
     public function __construct(
         public string $name,
         public int $id,
-        public string $siteUrl,
+        public ?string $siteUrl,
         public string $logoFilename,
         public int $ordering,
-        public string $sourceId,
+        public ?string $sourceId,
     ) {
     }
 
@@ -20,9 +20,9 @@ final readonly class ProducerView
      * @param array{
      *   name: string,
      *   id: int,
-     *   site_url: string,
+     *   site_url: string|null,
      *   logo_filename: string,
-     *   ordering: int,
+     *   ordering: string|int,
      *   source_id: string,
      * } $data
      */
@@ -33,7 +33,7 @@ final readonly class ProducerView
             $data['id'],
             $data['site_url'],
             $data['logo_filename'],
-            $data['ordering'],
+            (int) $data['ordering'],
             $data['source_id'],
         );
     }
@@ -42,10 +42,10 @@ final readonly class ProducerView
      * @return array{
      *   name: string,
      *   id: int,
-     *   site_url: string,
+     *   site_url: string|null,
      *   logo_filename: string,
      *   ordering: int,
-     *   source_id: string,
+     *   source_id: string|null,
      * }
      */
     public function toArray(): array

@@ -22,7 +22,7 @@ final readonly class Producer
      *   id: int,
      *   site_url: string,
      *   logo_filename: string,
-     *   ordering: int,
+     *   ordering: int|string,
      *   source_id: string,
      * } $data
      */
@@ -33,7 +33,7 @@ final readonly class Producer
             $data['id'],
             $data['site_url'],
             $data['logo_filename'],
-            $data['ordering'],
+            (int) $data['ordering'],
             $data['source_id'],
         );
     }

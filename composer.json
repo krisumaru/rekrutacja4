@@ -9,7 +9,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Codelabs\\RestClient\\": "src/"
+      "rekrutacja4\\RestClient\\": "src/"
     }
   },
   "license": "MIT",
