@@ -7,7 +7,6 @@ namespace rekrutacja4\RestClient\Http;
 use GuzzleHttp\Psr7\Request;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
-use rekrutacja4\RestClient\Exception\ApiException;
 use rekrutacja4\RestClient\Http\Transport\GuzzleTransport;
 
 readonly class Client implements ClientInterface
