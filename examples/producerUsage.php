@@ -21,7 +21,7 @@ $repo = new ProducerRepository($client);
 // createOne
 $created = $repo->createOne(new Producer(
     name: 'Acme Inc',
-    id: 17,
+    id: 1,
     siteUrl: 'https://acme.com',
     logoFilename: 'acme.png',
     ordering: 1,

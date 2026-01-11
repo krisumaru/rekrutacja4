@@ -81,7 +81,7 @@ abstract class AbstractRepository
 
         if ($code >= 400) {
             throw new BadRequestException(
-                sprintf('Bad request: %s', $body),
+                sprintf('Bad request with code %s: %s', $code, $body),
                 $code
             );
         }
