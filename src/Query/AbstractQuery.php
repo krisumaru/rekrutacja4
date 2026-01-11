@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace rekrutacja4\RestClient\Repository;
+namespace rekrutacja4\RestClient\Query;
 
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
@@ -11,7 +11,7 @@ use rekrutacja4\RestClient\Exception\ApiException;
 use rekrutacja4\RestClient\Exception\ValidationException;
 use rekrutacja4\RestClient\Http\ClientInterface;
 
-abstract class AbstractRepository
+abstract class AbstractQuery
 {
     protected ClientInterface $http;
 
@@ -56,7 +56,7 @@ abstract class AbstractRepository
     protected function handleResponse(ResponseInterface $response): array
     {
         $code = $response->getStatusCode();
-        $body = (string)$response->getBody();
+        $body = (string) $response->getBody();
         $data = $body === '' ? [] : json_decode($body, true);
 
         if (!is_array($data)) {

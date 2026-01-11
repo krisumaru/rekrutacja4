@@ -12,5 +12,11 @@
       "Codelabs\\RestClient\\": "src/"
     }
   },
-  "license": "MIT"
+  "license": "MIT",
+  "require-dev": {
+    "phpstan/phpstan": "^1.12"
+  },
+  "scripts": {
+    "phpstan": "vendor/bin/phpstan analyse -c phpstan.neon"
+  }
 }

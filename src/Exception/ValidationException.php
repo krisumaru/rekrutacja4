@@ -4,18 +4,27 @@ declare(strict_types=1);
 
 namespace rekrutacja4\RestClient\Exception;
 
-class ValidationException extends ApiException
-{
-    private array $messages;
+use Throwable;
 
-    public function __construct(string $message = '', array $messages = [], int $code = 0, \Throwable $previous = null)
-    {
+final class ValidationException extends ApiException
+{
+    /**
+     * @param array<string> $validationErrors
+     */
+    public function __construct(
+        string $message = '',
+        readonly private array $validationErrors = [],
+        int $code = 0,
+        ?Throwable $previous = null,
+    ) {
         parent::__construct($message, $code, $previous);
-        $this->messages = $messages;
     }
 
-    public function getValidationMessages(): array
+    /**
+     * @return array<string>
+     */
+    public function getValidationErrors(): array
     {
-        return $this->messages;
+        return $this->validationErrors;
     }
 }

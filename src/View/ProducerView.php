@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace rekrutacja4\RestClient\Model;
 
-final readonly class Producer
+final readonly class ProducerView
 {
     public function __construct(
         public string $name,

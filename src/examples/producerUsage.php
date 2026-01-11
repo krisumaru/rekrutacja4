@@ -7,6 +7,7 @@ require __DIR__ . '/../vendor/autoload.php';
 use GuzzleHttp\Client as Guzzle;
 use rekrutacja4\RestClient\Http\Client\GuzzleClient;
 use rekrutacja4\RestClient\Model\Producer;
+use rekrutacja4\RestClient\Query\ProducerQuery;
 use rekrutacja4\RestClient\Repository\ProducerRepository;
 
 // config
@@ -20,13 +21,20 @@ $guzzle = new Guzzle([
 $client = new GuzzleClient($guzzle);
 $repo = new ProducerRepository($client, $base);
 
+// createOne
+$created = $repo->createOne(new Producer(
+    name: 'Acme Inc',
+    id: 1,
+    siteUrl: 'https://acme.com',
+    logoFilename: 'acme.png',
+    ordering: 1,
+    sourceId: 'acme',
+));
+echo 'Created producer: ' . print_r($created, true) . "\n";
+
 // list all
-$producers = $repo->getAll();
+$query = new ProducerQuery($client, $base);
+$producers = $query->getAll();
 foreach ($producers as $p) {
     echo sprintf("Producer: %s (id: %s)\n", $p->name, $p->id ?? 'n/a');
 }
-
-// create
-$new = new Producer('Acme Inc');
-$created = $repo->createOne($new);
-echo "Created producer id: " . ($created->id ?? 'n/a') . "\n";
