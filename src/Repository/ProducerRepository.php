@@ -8,7 +8,7 @@ use rekrutacja4\RestClient\Model\Producer;
 
 class ProducerRepository extends AbstractRepository
 {
-    private const PATH = '/producers';
+    private const PATH = '/shop_api/v1/producers';
 
     /**
      * @return Producer[]
@@ -16,9 +16,13 @@ class ProducerRepository extends AbstractRepository
     public function getAll(): array
     {
         $data = $this->request('GET', self::PATH);
-        $items = $data['items'] ?? $data;
+        // possible shapes: ['items'=>[...]] or ['producers'=>[...]] or direct array
+        $items = $data['items'] ?? $data['producers'] ?? $data;
         $result = [];
         foreach ($items as $item) {
+            if (!is_array($item)) {
+                continue;
+            }
             $result[] = Producer::fromArray($item);
         }
         return $result;
@@ -26,8 +30,12 @@ class ProducerRepository extends AbstractRepository
 
     public function createOne(Producer $producer): Producer
     {
-        $payload = $producer->toArray();
+        // API expects the producer payload wrapped under "producer"
+        $payload = ['producer' => $producer->toArray()];
         $data = $this->request('POST', self::PATH, $payload);
-        return Producer::fromArray($data);
+
+        // response may be { producer: {...} } inside data or direct producer object
+        $producerData = $data['producer'] ?? $data;
+        return Producer::fromArray((array)$producerData);
     }
 }

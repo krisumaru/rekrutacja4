@@ -7,6 +7,7 @@ namespace rekrutacja4\RestClient\Repository;
 use Psr\Http\Message\ResponseInterface;
 use GuzzleHttp\Psr7\Request;
 use rekrutacja4\RestClient\Exception\ApiException;
+use rekrutacja4\RestClient\Exception\ValidationException;
 use rekrutacja4\RestClient\Http\ClientInterface;
 
 abstract class AbstractRepository
@@ -41,10 +42,32 @@ abstract class AbstractRepository
         $code = $response->getStatusCode();
         $body = (string)$response->getBody();
         $data = $body === '' ? [] : json_decode($body, true);
-        if ($code < 200 || $code >= 300) {
-            $message = is_array($data) && isset($data['message']) ? $data['message'] : $body;
-            throw new ApiException(sprintf('API error: %s (status %d)', $message, $code), $code);
+
+        if (!is_array($data)) {
+            if ($code < 200 || $code >= 300) {
+                throw new ApiException(sprintf('API error: empty or invalid JSON (status %d)', $code), $code);
+            }
+            return [];
         }
-        return is_array($data) ? $data : [];
+
+        // standard wrapper: { version, success, data, error }
+        if (isset($data['success']) && $data['success'] === false) {
+            $error = $data['error'] ?? [];
+            $reason = $error['reason_code'] ?? '';
+            $messages = $error['messages'] ?? [];
+            $msg = is_array($messages) ? implode('; ', $messages) : ($error['message'] ?? $body);
+            if ($reason === 'INVALID_DATA_FOR_OBJECT') {
+                throw new ValidationException($msg ?: 'Validation failed', (array)$messages, $code);
+            }
+            throw new ApiException($msg ?: 'API returned error', $code);
+        }
+
+        // success wrapper: prefer data content
+        if (isset($data['data'])) {
+            return (array)$data['data'];
+        }
+
+        // fallback - maybe API returns object directly (producer)
+        return $data;
     }
 }
